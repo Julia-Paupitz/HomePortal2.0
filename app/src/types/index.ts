@@ -75,6 +75,15 @@ export interface HelpLink {
   icon: string
 }
 
+export interface UserProfile {
+  firstName: string
+}
+
+export interface MyHome {
+  propertyValue: number
+  estimatedEquity: number
+}
+
 export interface LOContact {
   name: string
   role: string
@@ -82,4 +91,41 @@ export interface LOContact {
   phone: string
   website: string
   avatarInitials: string
+}
+
+export interface HomeTeamMember {
+  id: string
+  name: string
+  role: string
+  company?: string
+  phone: string
+  email: string
+  website?: string
+  avatarInitials: string
+  avatarColor: string
+}
+
+export interface ApplicationSummary {
+  applicationNumber: string
+  address: string
+  loanAmount: number
+  loanType: string
+  status: string
+}
+
+export type TaskStatus = 'pending' | 'complete'
+
+export interface ApplicationTask {
+  id: string
+  label: string
+  status: TaskStatus
+  due: string | null
+}
+
+export type MilestoneStatus = 'complete' | 'in-progress' | 'upcoming'
+
+export interface ApplicationMilestone {
+  id: string
+  label: string
+  status: MilestoneStatus
 }

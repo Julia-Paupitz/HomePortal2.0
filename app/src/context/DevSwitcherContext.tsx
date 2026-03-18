@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect, type ReactNode } from 'react'
 
-export type GlobalState = 'account-creation' | 'application' | 'application-submitted' | 'loan-funded'
+export type GlobalState = 'account-creation' | 'application' | 'application-in-progress' | 'application-submitted' | 'loan-funded'
 export type LayoutMode = 'desktop' | 'mobile'
 
 interface DevSwitcherState {

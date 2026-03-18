@@ -1,3 +1,4 @@
+import { useIsMobile } from '@/hooks/useIsMobile'
 import { downPaymentTracker, rateTracker } from '@/data/mockData'
 
 function DownPaymentTracker() {
@@ -74,8 +75,10 @@ function RateTracker() {
 }
 
 export function TrackingWidgets() {
+  const isMobile = useIsMobile()
+
   return (
-    <div className="grid grid-cols-2 gap-3">
+    <div className={isMobile ? 'space-y-3' : 'grid grid-cols-2 gap-3'}>
       <DownPaymentTracker />
       <RateTracker />
     </div>

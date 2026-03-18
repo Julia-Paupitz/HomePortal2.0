@@ -1,79 +1,178 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { Home, CirclePlus, Calculator, BookOpen } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { AppHeader } from '@/components/layout/AppHeader'
 import { AppSidebar } from '@/components/layout/AppSidebar'
 import { MobileSidebar } from '@/components/layout/MobileSidebar'
+import { MobileBottomNav } from '@/components/layout/MobileBottomNav'
 import { DevSwitcher } from '@/components/DevSwitcher'
+import { LiveChat } from '@/components/shared/LiveChat'
 import { useDevSwitcher } from '@/context/DevSwitcherContext'
+import { useIsMobile } from '@/hooks/useIsMobile'
 import { LoanOverviewPage } from '@/pages/LoanOverview'
 import { HomePage } from '@/pages/Home'
 import { AccountCreationPage } from '@/pages/AccountCreation'
 import { LoanApplicationPage } from '@/pages/LoanApplication'
 import { ApplicationSubmittedPage } from '@/pages/ApplicationSubmitted'
+import { ApplicationInProgressPage } from '@/pages/ApplicationInProgress'
+
+// Nav items for the account-creation state
+const accountCreationSidebarItems = [
+  { id: 'home',            label: 'Home',            icon: <Home size={16} /> },
+  { id: 'calculator',     label: 'Calculators',     icon: <Calculator size={16} /> },
+  { id: 'learning-center', label: 'Learning Center', icon: <BookOpen size={16} /> },
+]
+
+// Nav items for the application-in-progress state
+const appInProgressSidebarItems = [
+  { id: 'home',            label: 'Home',            icon: <Home size={16} /> },
+  { id: 'application',    label: 'Application',     icon: <CirclePlus size={16} /> },
+  { id: 'calculator',     label: 'Calculators',     icon: <Calculator size={16} /> },
+  { id: 'learning-center', label: 'Learning Center', icon: <BookOpen size={16} /> },
+]
+
+const appInProgressMobileNavItems = [
+  { id: 'home',            label: 'Home',            icon: Home },
+  { id: 'application',    label: 'Application',     icon: CirclePlus },
+  { id: 'calculator',     label: 'Calculators',     icon: Calculator },
+  { id: 'learning-center', label: 'Learning Center', icon: BookOpen },
+]
+
+// Nav items for the application-submitted state (no Loans item)
+const appSubmittedSidebarItems = [
+  { id: 'home',            label: 'Home',            icon: <Home size={16} /> },
+  { id: 'application',    label: 'Application',     icon: <CirclePlus size={16} /> },
+  { id: 'calculator',     label: 'Calculators',     icon: <Calculator size={16} /> },
+  { id: 'learning-center', label: 'Learning Center', icon: <BookOpen size={16} /> },
+]
+
+const appSubmittedMobileNavItems = [
+  { id: 'home',            label: 'Home',            icon: Home },
+  { id: 'application',    label: 'Application',     icon: CirclePlus },
+  { id: 'calculator',     label: 'Calculators',     icon: Calculator },
+  { id: 'learning-center', label: 'Learning Center', icon: BookOpen },
+]
 
 function AppShell() {
-  const { globalState, layoutMode } = useDevSwitcher()
+  const { globalState } = useDevSwitcher()
+  const isMobile = useIsMobile()
   const [activeNav, setActiveNav] = useState('home')
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false)
+  const [showPreferencesBadge, setShowPreferencesBadge] = useState(false)
 
-  const showHeader = globalState !== 'account-creation'
-  const showSidebar = globalState === 'loan-funded'
-  const isMobile = layoutMode === 'mobile'
+  // Reset activeNav when globalState or isMobile changes
+  useEffect(() => {
+    if (globalState === 'application-submitted') {
+      setActiveNav(isMobile ? 'home' : 'application')
+    } else {
+      setActiveNav('home')
+    }
+  }, [globalState, isMobile])
+
+  const showHeader = true
+  const showSidebar = ['loan-funded', 'application-submitted', 'application-in-progress', 'account-creation'].includes(globalState)
+  const showBottomNav = isMobile && ['loan-funded', 'application-submitted', 'application-in-progress'].includes(globalState)
+
+  const isAccountCreation = globalState === 'account-creation'
+  const isAppSubmitted = globalState === 'application-submitted'
+  const isAppInProgress = globalState === 'application-in-progress'
 
   function renderPage() {
-    if (globalState === 'account-creation')      return <AccountCreationPage />
-    if (globalState === 'application')           return <LoanApplicationPage />
-    if (globalState === 'application-submitted') return <ApplicationSubmittedPage />
+    if (globalState === 'account-creation')    return <AccountCreationPage />
+    if (globalState === 'application')         return <LoanApplicationPage />
+    if (globalState === 'application-in-progress') {
+      return <ApplicationInProgressPage activeNav={activeNav} onNavigate={setActiveNav} />
+    }
+    if (globalState === 'application-submitted') {
+      return (
+        <ApplicationSubmittedPage
+          activeNav={activeNav}
+          onNavigate={setActiveNav}
+          onBadgeChange={setShowPreferencesBadge}
+        />
+      )
+    }
 
-    // loan-funded: route by nav
-    if (activeNav === 'home') return <HomePage onNavigate={setActiveNav} />
+    if (activeNav === 'home')    return <HomePage onNavigate={setActiveNav} />
     if (activeNav === 'my-loan') return <LoanOverviewPage />
-    // fallback placeholder for other nav items
     return (
-      <div className="max-w-3xl mx-auto flex items-center justify-center py-24 text-sm text-gray-400 italic">
+      <div className="flex items-center justify-center py-24 text-sm text-gray-400 italic">
         Page coming soon
       </div>
     )
   }
 
+  // ── Mobile layout ──────────────────────────────────────────────────────────
+  if (isMobile) {
+    return (
+      <div className="min-h-screen bg-gray-200">
+        <div className="relative mx-auto min-w-[375px] max-w-[540px] h-screen bg-surface-50 flex flex-col rounded-[6px] overflow-hidden">
+          {showHeader && (
+            <AppHeader isMobile minimal={isAccountCreation} showPreferencesBadge={showPreferencesBadge} />
+          )}
+
+          <main className="flex-1 overflow-y-auto px-4 pb-6">
+            {renderPage()}
+          </main>
+
+          {showBottomNav && (
+            <MobileBottomNav
+              activeItem={activeNav}
+              onNavChange={setActiveNav}
+              navItems={isAppSubmitted ? appSubmittedMobileNavItems : isAppInProgress ? appInProgressMobileNavItems : undefined}
+            />
+          )}
+        </div>
+
+        <LiveChat mobile hasBottomNav={showBottomNav} />
+        <DevSwitcher />
+      </div>
+    )
+  }
+
+  // ── Desktop layout ─────────────────────────────────────────────────────────
   return (
     <div className="min-h-screen bg-surface-50">
-      {showHeader && <AppHeader onMenuClick={() => setMobileSidebarOpen(true)} />}
+      {showHeader && (
+        <AppHeader
+          onMenuClick={() => setMobileSidebarOpen(true)}
+          minimal={isAccountCreation}
+          showPreferencesBadge={showPreferencesBadge}
+        />
+      )}
 
-      {/* Desktop sidebar — only when sidebar is visible and not in mobile layout mode */}
-      {showSidebar && !isMobile && (
+      {showSidebar && (
         <div className="hidden lg:block">
-          <AppSidebar activeItem={activeNav} onNavChange={setActiveNav} />
+          <AppSidebar
+            activeItem={activeNav}
+            onNavChange={setActiveNav}
+            navItems={isAccountCreation ? accountCreationSidebarItems : isAppSubmitted ? appSubmittedSidebarItems : isAppInProgress ? appInProgressSidebarItems : undefined}
+          />
         </div>
       )}
 
-      {/* Mobile sidebar drawer */}
       {showSidebar && (
         <MobileSidebar
           open={mobileSidebarOpen}
           onOpenChange={setMobileSidebarOpen}
           activeItem={activeNav}
           onNavChange={setActiveNav}
+          navItems={isAccountCreation ? accountCreationSidebarItems : isAppSubmitted ? appSubmittedSidebarItems : isAppInProgress ? appInProgressSidebarItems : undefined}
         />
       )}
 
-      {/* Main content */}
       <main
         className={cn(
           showHeader && 'pt-[60px]',
-          showSidebar && !isMobile && 'lg:ml-[220px]'
+          showSidebar && 'lg:ml-[220px]'
         )}
       >
-        <div
-          className={cn(
-            'px-4 py-9 pb-16',
-            isMobile && 'max-w-[390px] mx-auto'
-          )}
-        >
+        <div className="px-4 py-9 pb-16">
           {renderPage()}
         </div>
       </main>
 
+      <LiveChat />
       <DevSwitcher />
     </div>
   )
