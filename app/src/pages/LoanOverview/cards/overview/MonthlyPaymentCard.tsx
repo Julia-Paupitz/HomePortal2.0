@@ -1,14 +1,29 @@
-import { CreditCard } from 'lucide-react'
+import { CreditCard, ChevronRight } from 'lucide-react'
 import { toast } from 'sonner'
 import { StatusBadge } from '@/components/shared/StatusBadge'
 import { nextPayment } from '@/data/mockData'
 
-export function MonthlyPaymentCard() {
+interface MonthlyPaymentCardProps {
+  onNavigateToPayments?: () => void
+}
+
+export function MonthlyPaymentCard({ onNavigateToPayments }: MonthlyPaymentCardProps) {
   const p = nextPayment
 
   return (
     <div className="bg-white rounded-[14px] p-6 shadow-[0_1px_4px_rgba(0,0,0,0.06),0_4px_16px_rgba(0,0,0,0.04)]">
-      <h2 className="text-[16px] font-bold text-navy-800 font-sans mb-5">Monthly Payment</h2>
+      <div className="flex items-center justify-between mb-5">
+        <h2 className="text-[16px] font-bold text-navy-800 font-sans">Monthly Payment</h2>
+        {onNavigateToPayments && (
+          <button
+            onClick={onNavigateToPayments}
+            className="flex items-center gap-1 text-[13px] font-medium text-teal-700 hover:underline"
+          >
+            View All
+            <ChevronRight size={14} />
+          </button>
+        )}
+      </div>
 
       <div className="flex flex-col sm:flex-row gap-5 pb-4 border-b border-surface-100">
         {/* Amount */}

@@ -2,11 +2,11 @@ import { CreditCard, Settings, Calculator } from 'lucide-react'
 
 const actions = [
   { icon: CreditCard, label: 'Make a Payment' },
-  { icon: Settings,   label: 'Payment Preferences' },
+  { icon: Settings,   label: 'Requests' },
   { icon: Calculator, label: 'Calculators' },
 ]
 
-export function QuickActionsCard() {
+export function OverviewQuickActionsCard() {
   return (
     <div className="flex flex-wrap gap-2">
       {actions.map(({ icon: Icon, label }) => (

@@ -5,6 +5,7 @@ import { useDevSwitcher, type GlobalState, type LayoutMode } from '@/context/Dev
 const globalStates: { key: GlobalState; label: string; color: string }[] = [
   { key: 'account-creation',      label: 'Account Creation',      color: '#9ca3af' },
   { key: 'application',           label: 'Application',           color: '#a16207' },
+  { key: 'application-in-progress', label: 'Application In Progress', color: '#ea580c' },
   { key: 'application-submitted', label: 'Application Submitted', color: '#0f766e' },
   { key: 'loan-funded',           label: 'Loan Funded',           color: '#16a34a' },
 ]
@@ -14,8 +15,23 @@ const layoutModes: { key: LayoutMode; label: string }[] = [
   { key: 'mobile',  label: 'Mobile' },
 ]
 
+const componentVariationDefs: {
+  key: string
+  label: string
+  options: { value: string; label: string }[]
+}[] = [
+  {
+    key: 'loanOverviewNav',
+    label: 'Loan Overview Nav (mobile)',
+    options: [
+      { value: 'tabs',     label: 'Tabs' },
+      { value: 'dropdown', label: 'Dropdown' },
+    ],
+  },
+]
+
 export function DevSwitcherPanel() {
-  const { isOpen, setIsOpen, layoutMode, setLayoutMode, globalState, setGlobalState, reset } = useDevSwitcher()
+  const { isOpen, setIsOpen, layoutMode, setLayoutMode, globalState, setGlobalState, componentVariations, setComponentVariation, reset } = useDevSwitcher()
 
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
@@ -83,8 +99,31 @@ export function DevSwitcherPanel() {
             <div className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">
               Component Variations
             </div>
-            <div className="text-xs text-gray-400 italic px-1">
-              No variations configured yet. Will grow as pages are built.
+            <div className="space-y-4">
+              {componentVariationDefs.map(def => {
+                const currentValue = componentVariations[def.key] ?? def.options[0].value
+                return (
+                  <div key={def.key}>
+                    <div className="text-xs text-gray-500 mb-2">{def.label}</div>
+                    <div className="flex gap-2">
+                      {def.options.map(option => (
+                        <button
+                          key={option.value}
+                          onClick={() => setComponentVariation(def.key, option.value)}
+                          className={cn(
+                            'flex-1 text-sm py-2 rounded-lg border font-medium transition-colors',
+                            currentValue === option.value
+                              ? 'bg-navy-800 text-white border-navy-800'
+                              : 'bg-white text-gray-600 border-gray-200 hover:border-gray-300'
+                          )}
+                        >
+                          {option.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )
+              })}
             </div>
           </div>
         </div>
