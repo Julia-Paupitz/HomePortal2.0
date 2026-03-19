@@ -25,17 +25,7 @@ const accountCreationSidebarItems = [
 
 // Nav items for the application-in-progress state
 const appInProgressSidebarItems = [
-  { id: 'home',            label: 'Home',            icon: <Home size={16} /> },
-  { id: 'application',    label: 'Application',     icon: <CirclePlus size={16} /> },
-  { id: 'calculator',     label: 'Calculators',     icon: <Calculator size={16} /> },
-  { id: 'learning-center', label: 'Learning Center', icon: <BookOpen size={16} /> },
-]
-
-const appInProgressMobileNavItems = [
-  { id: 'home',            label: 'Home',            icon: Home },
-  { id: 'application',    label: 'Application',     icon: CirclePlus },
-  { id: 'calculator',     label: 'Calculators',     icon: Calculator },
-  { id: 'learning-center', label: 'Learning Center', icon: BookOpen },
+  { id: 'home', label: 'Home', icon: <Home size={16} /> },
 ]
 
 // Nav items for the application-submitted state (no Loans item)
@@ -71,18 +61,16 @@ function AppShell() {
 
   const showHeader = true
   const showSidebar = ['loan-funded', 'application-submitted', 'application-in-progress', 'account-creation'].includes(globalState)
-  const showBottomNav = isMobile && ['loan-funded', 'application-submitted', 'application-in-progress'].includes(globalState)
+  const showBottomNav = isMobile && ['loan-funded', 'application-submitted'].includes(globalState)
 
   const isAccountCreation = globalState === 'account-creation'
   const isAppSubmitted = globalState === 'application-submitted'
   const isAppInProgress = globalState === 'application-in-progress'
 
   function renderPage() {
-    if (globalState === 'account-creation')    return <AccountCreationPage />
-    if (globalState === 'application')         return <LoanApplicationPage />
-    if (globalState === 'application-in-progress') {
-      return <ApplicationInProgressPage activeNav={activeNav} onNavigate={setActiveNav} />
-    }
+    if (globalState === 'account-creation')        return <AccountCreationPage />
+    if (globalState === 'application')             return <LoanApplicationPage />
+    if (globalState === 'application-in-progress') return <ApplicationInProgressPage />
     if (globalState === 'application-submitted') {
       return (
         <ApplicationSubmittedPage
@@ -119,7 +107,7 @@ function AppShell() {
             <MobileBottomNav
               activeItem={activeNav}
               onNavChange={setActiveNav}
-              navItems={isAppSubmitted ? appSubmittedMobileNavItems : isAppInProgress ? appInProgressMobileNavItems : undefined}
+              navItems={isAppSubmitted ? appSubmittedMobileNavItems : undefined}
             />
           )}
         </div>

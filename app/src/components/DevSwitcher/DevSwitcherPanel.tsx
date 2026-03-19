@@ -3,9 +3,8 @@ import { cn } from '@/lib/utils'
 import { useDevSwitcher, type GlobalState, type LayoutMode } from '@/context/DevSwitcherContext'
 
 const globalStates: { key: GlobalState; label: string; color: string }[] = [
-  { key: 'account-creation',      label: 'Account Creation',      color: '#9ca3af' },
-  { key: 'application',           label: 'Application',           color: '#a16207' },
-  { key: 'application-in-progress', label: 'Application In Progress', color: '#ea580c' },
+  { key: 'account-creation',        label: 'Start from Account Creation', color: '#9ca3af' },
+  { key: 'application-in-progress', label: 'Start from Apply Now',        color: '#ea580c' },
   { key: 'application-submitted', label: 'Application Submitted', color: '#0f766e' },
   { key: 'loan-funded',           label: 'Loan Funded',           color: '#16a34a' },
 ]
