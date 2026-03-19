@@ -1,13 +1,14 @@
 import { useState } from 'react'
 import { ArrowRight, Home, ChevronDown, ChevronUp } from 'lucide-react'
 import { userProfile } from '@/data/mockData'
+import { useDevSwitcher } from '@/context/DevSwitcherContext'
 
 const APP_URL = 'https://andyg-xd-smartapp-fu-tldx.bolt.host/apply/property-info'
 
 const TOTAL_STEPS = 5
 const COMPLETED_STEPS = 1
 
-function UnfinishedAppCard() {
+function UnfinishedAppCard({ onSubmit }: { onSubmit: () => void }) {
   const progressPct = (COMPLETED_STEPS / TOTAL_STEPS) * 100
 
   return (
@@ -55,10 +56,18 @@ function UnfinishedAppCard() {
         </div>
       </div>
 
-      {/* CTA */}
-      <div className="inline-flex items-center gap-2 bg-teal-700 group-hover:bg-[#145f5e] text-white font-semibold text-sm px-5 py-2.5 rounded-xl transition-colors">
-        Continue Application
-        <ArrowRight size={16} className="transition-transform group-hover:translate-x-0.5" />
+      {/* CTAs */}
+      <div className="flex flex-wrap items-center gap-3">
+        <div className="inline-flex items-center gap-2 bg-teal-700 group-hover:bg-[#145f5e] text-white font-semibold text-sm px-5 py-2.5 rounded-xl transition-colors">
+          Continue Application
+          <ArrowRight size={16} className="transition-transform group-hover:translate-x-0.5" />
+        </div>
+        <button
+          onClick={e => { e.preventDefault(); e.stopPropagation(); onSubmit() }}
+          className="inline-flex items-center gap-2 border border-teal-700 text-teal-700 font-semibold text-sm px-5 py-2.5 rounded-xl hover:bg-teal-50 transition-colors"
+        >
+          Submit Application
+        </button>
       </div>
     </a>
   )
@@ -120,6 +129,8 @@ function FAQCard() {
 }
 
 export function ApplicationInProgressPage() {
+  const { setGlobalState } = useDevSwitcher()
+
   return (
     <div className="max-w-2xl mx-auto space-y-8 pt-6">
       <h1 className="font-kadwa text-2xl text-navy-800">
@@ -128,7 +139,7 @@ export function ApplicationInProgressPage() {
 
       <section className="space-y-3">
         <h2 className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Applications</h2>
-        <UnfinishedAppCard />
+        <UnfinishedAppCard onSubmit={() => setGlobalState('application-submitted')} />
       </section>
 
       <section className="space-y-3">
