@@ -1,4 +1,5 @@
-import { ChevronRight } from 'lucide-react'
+import { useState } from 'react'
+import { ChevronRight, Eye, EyeOff } from 'lucide-react'
 import { StatusBadge } from '@/components/shared/StatusBadge'
 import type { LoanSummary, NextPayment } from '@/types'
 
@@ -9,15 +10,26 @@ interface LoanSummaryCardProps {
 
 export function LoanSummaryCard({ loan, onNavigate }: LoanSummaryCardProps) {
   const { summary, payment } = loan
+  const [revealed, setRevealed] = useState(false)
+
   return (
     <button
       onClick={() => onNavigate('my-loan', loan.id)}
       className="w-full text-left bg-white border border-gray-200 rounded-xl p-4 hover:border-teal-700/40 hover:shadow-sm transition-all group"
     >
-      {/* Top row: loan number + badge + chevron */}
+      {/* Top row: loan number + toggle + badge + chevron */}
       <div className="flex items-center justify-between mb-1.5">
         <div className="flex items-center gap-2">
-          <span className="text-xs text-gray-500 font-medium">{summary.loanNumber}</span>
+          <span className="text-base font-semibold text-navy-800">
+            {revealed ? summary.loanNumberFull : summary.loanNumber}
+          </span>
+          <button
+            onClick={e => { e.stopPropagation(); setRevealed(r => !r) }}
+            className="text-gray-400 hover:text-teal-700 transition-colors"
+            aria-label={revealed ? 'Hide loan number' : 'Show full loan number'}
+          >
+            {revealed ? <EyeOff size={14} /> : <Eye size={14} />}
+          </button>
           <StatusBadge variant={payment.status} label={payment.statusLabel} />
         </div>
         <ChevronRight size={18} className="text-gray-400 group-hover:text-teal-700 transition-colors shrink-0" />
@@ -28,7 +40,7 @@ export function LoanSummaryCard({ loan, onNavigate }: LoanSummaryCardProps) {
 
       <hr className="border-t border-gray-100 my-3" />
 
-      {/* Stats — 3 columns fill the full width */}
+      {/* Stats — 3 columns */}
       <div className="grid grid-cols-3">
         <div>
           <div className="text-xs text-gray-400 mb-0.5">Balance</div>

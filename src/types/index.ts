@@ -1,5 +1,6 @@
 export interface LoanSummary {
   loanNumber: string
+  loanNumberFull: string
   address: string
   principalBalance: number
   originalLoanAmount: number

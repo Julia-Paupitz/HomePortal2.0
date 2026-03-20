@@ -87,3 +87,13 @@
     @apply bg-surface-50 text-navy-800 font-sans;
   }
 }
+
+/* Teal background theme — override utility classes directly because @theme inline bakes values in */
+[data-theme="teal-bg"] .bg-surface-50  { background-color: #CDEAE7; }
+[data-theme="teal-bg"] .bg-surface-100 { background-color: #BAE0DC; }
+[data-theme="teal-bg"] body            { background-color: #CDEAE7; }
+
+/* Teal navigation bar theme */
+[data-theme="teal-nav"] .bg-surface-50  { background-color: #FFFFFF; }
+[data-theme="teal-nav"] .bg-surface-100 { background-color: #F4F5F6; }
+[data-theme="teal-nav"] body            { background-color: #FFFFFF; }

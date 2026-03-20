@@ -18,7 +18,7 @@ export function HomePage({ onNavigate }: HomePageProps) {
   const loansHeading = loanNavMode === 'single' ? 'Loans' : `Loans (${loans.length})`
 
   return (
-    <div className={isMobile ? 'pt-6 space-y-6' : 'max-w-4xl mx-auto grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-6'}>
+    <div className={isMobile ? 'pt-6 space-y-6' : 'max-w-4xl mx-auto grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-16'}>
       {/* Left column (or full-width on mobile) */}
       <div className="space-y-6">
         {/* Welcome greeting */}
