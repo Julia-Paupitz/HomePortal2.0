@@ -129,3 +129,9 @@ export interface ApplicationMilestone {
   label: string
   status: MilestoneStatus
 }
+
+export interface LoanDocument {
+  id: string
+  name: string
+  date: string  // ISO YYYY-MM-DD
+}

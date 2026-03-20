@@ -1,7 +1,9 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Bell, User, Menu, ChevronDown, ChevronUp } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { MyHomeTeamPanel } from './MyHomeTeamPanel'
+import { NotificationMenu } from '@/components/notifications/NotificationMenu'
+import { useDevSwitcher } from '@/context/DevSwitcherContext'
 
 interface AppHeaderProps {
   onMenuClick?: () => void
@@ -12,6 +14,35 @@ interface AppHeaderProps {
 
 export function AppHeader({ onMenuClick, isMobile, showPreferencesBadge, minimal }: AppHeaderProps) {
   const [homeTeamOpen, setHomeTeamOpen] = useState(false)
+  const [bellOpen, setBellOpen] = useState(false)
+  const [bellRead, setBellRead] = useState(true)
+  const bellContainerRef = useRef<HTMLDivElement>(null)
+
+  const { notifications } = useDevSwitcher()
+  const hasAnyActive = notifications.paymentAccepted || notifications.taxStatement || notifications.hurricaneAlert
+  const showBadge = hasAnyActive && !bellRead
+
+  // Mark bell as unread whenever a new notification becomes active
+  useEffect(() => {
+    if (hasAnyActive) setBellRead(false)
+  }, [notifications.paymentAccepted, notifications.taxStatement]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Close bell menu on outside click
+  useEffect(() => {
+    if (!bellOpen) return
+    function handle(e: MouseEvent) {
+      if (bellContainerRef.current && !bellContainerRef.current.contains(e.target as Node)) {
+        setBellOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handle)
+    return () => document.removeEventListener('mousedown', handle)
+  }, [bellOpen])
+
+  function handleBellClick() {
+    setBellOpen(o => !o)
+    setBellRead(true)
+  }
 
   return (
     <>
@@ -46,12 +77,19 @@ export function AppHeader({ onMenuClick, isMobile, showPreferencesBadge, minimal
         {/* Right: bell + My Home Team (mobile) + Apply Now (desktop) + avatar */}
         <div className="flex items-center gap-3">
           {!minimal && (
-            <button
-              aria-label="Notifications"
-              className="text-white/75 hover:text-white p-1.5 rounded-lg hover:bg-white/10 transition-colors"
-            >
-              <Bell size={20} />
-            </button>
+            <div ref={bellContainerRef} className="relative">
+              <button
+                onClick={handleBellClick}
+                aria-label="Notifications"
+                className="relative text-white/75 hover:text-white p-1.5 rounded-lg hover:bg-white/10 transition-colors"
+              >
+                <Bell size={20} />
+                {showBadge && (
+                  <span className="absolute top-0 right-0 w-3 h-3 rounded-full bg-red-500 border-2 border-[#1e3340]" />
+                )}
+              </button>
+              {bellOpen && <NotificationMenu notifications={notifications} />}
+            </div>
           )}
 
           {!minimal && isMobile && (

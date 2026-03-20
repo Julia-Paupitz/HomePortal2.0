@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { Hop as Home, ChevronDown } from 'lucide-react'
+import { useState, useEffect } from 'react'
+import { House as Home, ChevronDown } from 'lucide-react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useIsMobile } from '@/hooks/useIsMobile'
 import { useDevSwitcher } from '@/context/DevSwitcherContext'
@@ -20,7 +20,7 @@ const SECTIONS = [
   { value: 'overview',   label: 'Overview' },
   { value: 'payments',   label: 'Payments' },
   { value: 'escrow',     label: 'Escrow' },
-  { value: 'documents',  label: 'Documents (3)' },
+  { value: 'documents',  label: 'Documents' },
 ]
 
 function SectionDropdown({ value, onChange }: { value: string; onChange: (v: string) => void }) {
@@ -40,10 +40,22 @@ function SectionDropdown({ value, onChange }: { value: string; onChange: (v: str
   )
 }
 
-export function LoanOverviewPage() {
-  const [activeTab, setActiveTab] = useState('overview')
+interface LoanOverviewPageProps {
+  requestedTab?: string
+  onTabConsumed?: () => void
+}
+
+export function LoanOverviewPage({ requestedTab, onTabConsumed }: LoanOverviewPageProps) {
+  const [activeTab, setActiveTab] = useState(requestedTab ?? 'overview')
+
+  useEffect(() => {
+    if (requestedTab) {
+      setActiveTab(requestedTab)
+      onTabConsumed?.()
+    }
+  }, [requestedTab]) // eslint-disable-line react-hooks/exhaustive-deps
   const isMobile = useIsMobile()
-  const { componentVariations } = useDevSwitcher()
+  const { componentVariations, notifications } = useDevSwitcher()
   const showWidgets = widgetTabs.has(activeTab) && !isMobile
   const useDropdownNav = isMobile && componentVariations['loanOverviewNav'] === 'dropdown'
 
@@ -74,9 +86,9 @@ export function LoanOverviewPage() {
       </TabsTrigger>
       <TabsTrigger value="documents" className={`relative ${tabTriggerClass}`}>
         Documents
-        <span className="absolute -top-1 -right-0.5 bg-red-500 text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center leading-none">
-          3
-        </span>
+        {notifications.taxStatement && (
+          <span className="absolute -top-1.5 -right-1.5 w-3 h-3 rounded-full bg-yellow-400 border border-yellow-600" />
+        )}
       </TabsTrigger>
     </TabsList>
   )

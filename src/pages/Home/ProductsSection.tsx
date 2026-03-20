@@ -8,15 +8,15 @@ const products = [
     fullName: 'All-In-One',
     tagline: 'Use your home like a bank account',
     icon: <Landmark size={22} className="text-teal-700" />,
-    iconBg: 'bg-teal-50',
+    iconBg: 'bg-teal-100',
   },
   {
     id: 'homefundit',
     name: 'Home FundIt',
     fullName: 'Home FundIt',
     tagline: 'Crowdfund your down payment',
-    icon: <Users size={22} className="text-navy-500" />,
-    iconBg: 'bg-navy-300/10',
+    icon: <Users size={22} className="text-indigo-600" />,
+    iconBg: 'bg-indigo-100',
   },
 ]
 
@@ -38,7 +38,7 @@ export function ProductsSection() {
               key={product.id}
               className="bg-white border border-gray-200 rounded-xl p-4 flex flex-col gap-3 shrink-0 w-[180px]"
             >
-              <div className={`w-10 h-10 rounded-lg ${product.iconBg} flex items-center justify-center`}>
+              <div className={`w-10 h-10 rounded-full ${product.iconBg} flex items-center justify-center`}>
                 {product.icon}
               </div>
               <div>
@@ -58,7 +58,7 @@ export function ProductsSection() {
               key={product.id}
               className="bg-white border border-gray-200 rounded-xl p-4 flex flex-col gap-3"
             >
-              <div className={`w-10 h-10 rounded-lg ${product.iconBg} flex items-center justify-center`}>
+              <div className={`w-10 h-10 rounded-full ${product.iconBg} flex items-center justify-center`}>
                 {product.icon}
               </div>
               <div>

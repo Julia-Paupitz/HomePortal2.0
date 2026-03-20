@@ -1,6 +1,6 @@
 import { Sheet, SheetContent } from '@/components/ui/sheet'
 import { cn } from '@/lib/utils'
-import { useDevSwitcher, type GlobalState, type LayoutMode } from '@/context/DevSwitcherContext'
+import { useDevSwitcher, type GlobalState, type LayoutMode, type NotificationFlags } from '@/context/DevSwitcherContext'
 
 const globalStates: { key: GlobalState; label: string; color: string }[] = [
   { key: 'account-creation',        label: 'Start from Account Creation', color: '#9ca3af' },
@@ -29,8 +29,14 @@ const componentVariationDefs: {
   },
 ]
 
+const notificationDefs: { key: keyof NotificationFlags; label: string; description: string }[] = [
+  { key: 'paymentAccepted', label: 'Payment Accepted',        description: 'Bell notification' },
+  { key: 'taxStatement',    label: 'Tax Statement Available', description: 'Dismissible banner + bell + Docs badge' },
+  { key: 'hurricaneAlert',  label: 'Hurricane Alert',         description: 'Non-dismissible banner (loan-funded only)' },
+]
+
 export function DevSwitcherPanel() {
-  const { isOpen, setIsOpen, layoutMode, setLayoutMode, globalState, setGlobalState, componentVariations, setComponentVariation, reset } = useDevSwitcher()
+  const { isOpen, setIsOpen, layoutMode, setLayoutMode, globalState, setGlobalState, componentVariations, setComponentVariation, notifications, setNotification, reset } = useDevSwitcher()
 
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
@@ -123,6 +129,39 @@ export function DevSwitcherPanel() {
                   </div>
                 )
               })}
+            </div>
+          </div>
+
+          {/* Notifications */}
+          <div>
+            <div className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">
+              Notifications
+            </div>
+            <div className="space-y-3">
+              {notificationDefs.map(def => (
+                <div key={def.key} className="flex items-center justify-between gap-3">
+                  <div className="min-w-0">
+                    <p className="text-sm text-navy-800 font-medium">{def.label}</p>
+                    <p className="text-[11px] text-gray-400 mt-0.5">{def.description}</p>
+                  </div>
+                  <button
+                    onClick={() => setNotification(def.key, !notifications[def.key])}
+                    className={cn(
+                      'relative inline-flex h-5 w-9 shrink-0 rounded-full transition-colors duration-200',
+                      notifications[def.key] ? 'bg-teal-600' : 'bg-gray-200'
+                    )}
+                    role="switch"
+                    aria-checked={notifications[def.key]}
+                  >
+                    <span
+                      className={cn(
+                        'absolute top-0.5 left-0.5 h-4 w-4 rounded-full bg-white shadow transition-transform duration-200',
+                        notifications[def.key] ? 'translate-x-4' : 'translate-x-0'
+                      )}
+                    />
+                  </button>
+                </div>
+              ))}
             </div>
           </div>
         </div>

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Hop as Home, CirclePlus, Calculator, BookOpen } from 'lucide-react'
+import { House as Home, CirclePlus, Calculator, BookOpen } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { AppHeader } from '@/components/layout/AppHeader'
 import { AppSidebar } from '@/components/layout/AppSidebar'
@@ -8,6 +8,8 @@ import { MobileBottomNav } from '@/components/layout/MobileBottomNav'
 import { DevSwitcher } from '@/components/DevSwitcher'
 import { LiveChat } from '@/components/shared/LiveChat'
 import { useDevSwitcher } from '@/context/DevSwitcherContext'
+import { Banner } from '@/components/notifications/Banner'
+import { FileText, AlertTriangle } from 'lucide-react'
 import { useIsMobile } from '@/hooks/useIsMobile'
 import { LoanOverviewPage } from '@/pages/LoanOverview'
 import { HomePage } from '@/pages/Home'
@@ -44,11 +46,12 @@ const appSubmittedMobileNavItems = [
 ]
 
 function AppShell() {
-  const { globalState } = useDevSwitcher()
+  const { globalState, notifications, setNotification } = useDevSwitcher()
   const isMobile = useIsMobile()
   const [activeNav, setActiveNav] = useState('home')
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false)
   const [showPreferencesBadge, setShowPreferencesBadge] = useState(false)
+  const [loanRequestedTab, setLoanRequestedTab] = useState<string | undefined>()
 
   // Reset activeNav when globalState or isMobile changes
   useEffect(() => {
@@ -82,7 +85,12 @@ function AppShell() {
     }
 
     if (activeNav === 'home')    return <HomePage onNavigate={setActiveNav} />
-    if (activeNav === 'my-loan') return <LoanOverviewPage />
+    if (activeNav === 'my-loan') return (
+      <LoanOverviewPage
+        requestedTab={loanRequestedTab}
+        onTabConsumed={() => setLoanRequestedTab(undefined)}
+      />
+    )
     return (
       <div className="flex items-center justify-center py-24 text-sm text-gray-400 italic">
         Page coming soon
@@ -99,8 +107,29 @@ function AppShell() {
             <AppHeader isMobile minimal={isAccountCreation} showPreferencesBadge={showPreferencesBadge} />
           )}
 
-          <main className="flex-1 overflow-y-auto px-4 pb-6">
-            {renderPage()}
+          <main className="flex-1 overflow-y-auto">
+            {notifications.taxStatement && (
+              <Banner
+                type="dismissible"
+                variant="info"
+                icon={<FileText size={18} />}
+                title="Your 2024 Tax Statement is available"
+                action={{ label: 'View Tax Statement →', onClick: () => { setActiveNav('my-loan'); setLoanRequestedTab('documents') } }}
+                onDismiss={() => setNotification('taxStatement', false)}
+              />
+            )}
+            {notifications.hurricaneAlert && globalState === 'loan-funded' && (
+              <Banner
+                type="non-dismissible"
+                variant="warning"
+                icon={<AlertTriangle size={18} />}
+                title="Hurricane Warning in effect for your area"
+                body="Please review your insurance coverage and emergency plan."
+              />
+            )}
+            <div className="px-4 pb-6">
+              {renderPage()}
+            </div>
           </main>
 
           {showBottomNav && (
@@ -155,6 +184,25 @@ function AppShell() {
           showSidebar && 'lg:ml-[220px]'
         )}
       >
+        {notifications.taxStatement && (
+          <Banner
+            type="dismissible"
+            variant="info"
+            icon={<FileText size={18} />}
+            title="Your 2024 Tax Statement is available"
+            action={{ label: 'View Tax Statement →', onClick: () => { setActiveNav('my-loan'); setLoanRequestedTab('documents') } }}
+            onDismiss={() => setNotification('taxStatement', false)}
+          />
+        )}
+        {notifications.hurricaneAlert && globalState === 'loan-funded' && (
+          <Banner
+            type="non-dismissible"
+            variant="warning"
+            icon={<AlertTriangle size={18} />}
+            title="Hurricane Warning in effect for your area"
+            body="Please review your insurance coverage and emergency plan."
+          />
+        )}
         <div className="px-4 py-9 pb-16">
           {renderPage()}
         </div>

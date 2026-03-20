@@ -3,11 +3,24 @@ import { createContext, useContext, useState, useEffect, type ReactNode } from '
 export type GlobalState = 'account-creation' | 'application' | 'application-in-progress' | 'application-submitted' | 'loan-funded'
 export type LayoutMode = 'desktop' | 'mobile'
 
+export interface NotificationFlags {
+  paymentAccepted: boolean
+  taxStatement: boolean
+  hurricaneAlert: boolean
+}
+
+const defaultNotifications: NotificationFlags = {
+  paymentAccepted: false,
+  taxStatement: false,
+  hurricaneAlert: false,
+}
+
 interface DevSwitcherState {
   isOpen: boolean
   layoutMode: LayoutMode
   globalState: GlobalState
   componentVariations: Record<string, string>
+  notifications: NotificationFlags
 }
 
 interface DevSwitcherContextValue extends DevSwitcherState {
@@ -15,6 +28,7 @@ interface DevSwitcherContextValue extends DevSwitcherState {
   setLayoutMode: (mode: LayoutMode) => void
   setGlobalState: (state: GlobalState) => void
   setComponentVariation: (key: string, value: string) => void
+  setNotification: (key: keyof NotificationFlags, value: boolean) => void
   reset: () => void
 }
 
@@ -25,6 +39,7 @@ const defaults: DevSwitcherState = {
   layoutMode: 'desktop',
   globalState: 'loan-funded',
   componentVariations: {},
+  notifications: defaultNotifications,
 }
 
 function loadFromStorage(): DevSwitcherState {
@@ -32,7 +47,12 @@ function loadFromStorage(): DevSwitcherState {
     const stored = localStorage.getItem(STORAGE_KEY)
     if (stored) {
       const parsed = JSON.parse(stored) as Partial<DevSwitcherState>
-      return { ...defaults, ...parsed, isOpen: false }
+      return {
+        ...defaults,
+        ...parsed,
+        notifications: { ...defaultNotifications, ...(parsed.notifications ?? {}) },
+        isOpen: false,
+      }
     }
   } catch {
     // ignore parse errors
@@ -52,20 +72,23 @@ export function DevSwitcherProvider({ children }: { children: ReactNode }) {
         layoutMode: state.layoutMode,
         globalState: state.globalState,
         componentVariations: state.componentVariations,
+        notifications: state.notifications,
       })
     )
-  }, [state.layoutMode, state.globalState, state.componentVariations])
+  }, [state.layoutMode, state.globalState, state.componentVariations, state.notifications])
 
   const setIsOpen = (isOpen: boolean) => setState(s => ({ ...s, isOpen }))
   const setLayoutMode = (layoutMode: LayoutMode) => setState(s => ({ ...s, layoutMode }))
   const setGlobalState = (globalState: GlobalState) => setState(s => ({ ...s, globalState }))
   const setComponentVariation = (key: string, value: string) =>
     setState(s => ({ ...s, componentVariations: { ...s.componentVariations, [key]: value } }))
+  const setNotification = (key: keyof NotificationFlags, value: boolean) =>
+    setState(s => ({ ...s, notifications: { ...s.notifications, [key]: value } }))
   const reset = () => setState({ ...defaults })
 
   return (
     <DevSwitcherContext.Provider
-      value={{ ...state, setIsOpen, setLayoutMode, setGlobalState, setComponentVariation, reset }}
+      value={{ ...state, setIsOpen, setLayoutMode, setGlobalState, setComponentVariation, setNotification, reset }}
     >
       {children}
     </DevSwitcherContext.Provider>

@@ -1,4 +1,4 @@
-import { Hop as Home, Building2, Calculator, BookOpen } from 'lucide-react'
+import { House as Home, Building2, Calculator, BookOpen } from 'lucide-react'
 import { Sheet, SheetContent } from '@/components/ui/sheet'
 import { NavItem } from './NavItem'
 import type { SidebarNavItem } from './AppSidebar'
