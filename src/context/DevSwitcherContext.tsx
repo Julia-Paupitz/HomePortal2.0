@@ -3,6 +3,7 @@ import { createContext, useContext, useState, useEffect, type ReactNode } from '
 export type GlobalState = 'account-creation' | 'application' | 'application-in-progress' | 'application-submitted' | 'loan-funded'
 export type LayoutMode = 'desktop' | 'mobile'
 export type LoanNavMode = 'single' | 'option-a' | 'option-b'
+export type ColorTheme = 'default' | 'teal-bg' | 'teal-nav'
 
 export interface NotificationFlags {
   paymentAccepted: boolean
@@ -24,6 +25,7 @@ interface DevSwitcherState {
   notifications: NotificationFlags
   loanNavMode: LoanNavMode
   selectedLoanId: string
+  colorTheme: ColorTheme
 }
 
 interface DevSwitcherContextValue extends DevSwitcherState {
@@ -34,6 +36,7 @@ interface DevSwitcherContextValue extends DevSwitcherState {
   setNotification: (key: keyof NotificationFlags, value: boolean) => void
   setLoanNavMode: (mode: LoanNavMode) => void
   setSelectedLoanId: (id: string) => void
+  setColorTheme: (t: ColorTheme) => void
   reset: () => void
 }
 
@@ -47,6 +50,7 @@ const defaults: DevSwitcherState = {
   notifications: defaultNotifications,
   loanNavMode: 'single',
   selectedLoanId: 'loan-1',
+  colorTheme: 'default',
 }
 
 function loadFromStorage(): DevSwitcherState {
@@ -60,6 +64,7 @@ function loadFromStorage(): DevSwitcherState {
         notifications: { ...defaultNotifications, ...(parsed.notifications ?? {}) },
         loanNavMode: (parsed.loanNavMode as LoanNavMode | undefined) ?? defaults.loanNavMode,
         selectedLoanId: parsed.selectedLoanId ?? defaults.selectedLoanId,
+        colorTheme: (parsed.colorTheme as ColorTheme | undefined) ?? defaults.colorTheme,
         isOpen: false,
       }
     }
@@ -84,9 +89,10 @@ export function DevSwitcherProvider({ children }: { children: ReactNode }) {
         notifications: state.notifications,
         loanNavMode: state.loanNavMode,
         selectedLoanId: state.selectedLoanId,
+        colorTheme: state.colorTheme,
       })
     )
-  }, [state.layoutMode, state.globalState, state.componentVariations, state.notifications, state.loanNavMode, state.selectedLoanId])
+  }, [state.layoutMode, state.globalState, state.componentVariations, state.notifications, state.loanNavMode, state.selectedLoanId, state.colorTheme])
 
   const setIsOpen = (isOpen: boolean) => setState(s => ({ ...s, isOpen }))
   const setLayoutMode = (layoutMode: LayoutMode) => setState(s => ({ ...s, layoutMode }))
@@ -97,11 +103,20 @@ export function DevSwitcherProvider({ children }: { children: ReactNode }) {
     setState(s => ({ ...s, notifications: { ...s.notifications, [key]: value } }))
   const setLoanNavMode = (loanNavMode: LoanNavMode) => setState(s => ({ ...s, loanNavMode }))
   const setSelectedLoanId = (selectedLoanId: string) => setState(s => ({ ...s, selectedLoanId }))
+  const setColorTheme = (colorTheme: ColorTheme) => setState(s => ({ ...s, colorTheme }))
   const reset = () => setState({ ...defaults })
+
+  useEffect(() => {
+    if (state.colorTheme === 'default') {
+      document.documentElement.removeAttribute('data-theme')
+    } else {
+      document.documentElement.setAttribute('data-theme', state.colorTheme)
+    }
+  }, [state.colorTheme])
 
   return (
     <DevSwitcherContext.Provider
-      value={{ ...state, setIsOpen, setLayoutMode, setGlobalState, setComponentVariation, setNotification, setLoanNavMode, setSelectedLoanId, reset }}
+      value={{ ...state, setIsOpen, setLayoutMode, setGlobalState, setComponentVariation, setNotification, setLoanNavMode, setSelectedLoanId, setColorTheme, reset }}
     >
       {children}
     </DevSwitcherContext.Provider>

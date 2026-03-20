@@ -18,6 +18,7 @@ import type {
 
 export const loanSummary: LoanSummary = {
   loanNumber: '••••••••1234',
+  loanNumberFull: '5920008412',
   address: '148 S Allen St, State College, PA 16801',
   principalBalance: 2000.00,
   originalLoanAmount: 2000.00,
@@ -262,6 +263,7 @@ export const homeTeam: HomeTeamMember[] = [
 
 export const loanSummary2: LoanSummary = {
   loanNumber: '••••••••5678',
+  loanNumberFull: '5920008456',
   address: '201 Oak Ave, Pittsburgh, PA 15201',
   principalBalance: 187_500,
   originalLoanAmount: 240_000,

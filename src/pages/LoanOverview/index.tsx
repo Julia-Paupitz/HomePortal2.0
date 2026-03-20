@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { House as Home, ChevronDown, ChevronLeft, Check } from 'lucide-react'
+import { House as Home, ChevronDown, ChevronLeft, Check, Eye, EyeOff } from 'lucide-react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import {
   DropdownMenu,
@@ -55,6 +55,7 @@ interface LoanOverviewPageProps {
 
 export function LoanOverviewPage({ requestedTab, onTabConsumed, fromLoansList = false, onBack }: LoanOverviewPageProps) {
   const [activeTab, setActiveTab] = useState(requestedTab ?? 'overview')
+  const [revealed, setRevealed] = useState(false)
 
   useEffect(() => {
     if (requestedTab) {
@@ -79,35 +80,54 @@ export function LoanOverviewPage({ requestedTab, onTabConsumed, fromLoansList = 
       </div>
       <div>
         {loanNavMode === 'option-b' ? (
-          /* Option B: dropdown to switch loans */
-          <DropdownMenu>
-            <DropdownMenuTrigger className="flex items-center gap-2 font-kadwa text-[22px] font-bold text-navy-800 leading-tight cursor-pointer pl-1 pr-2.5 py-0.5 rounded-lg border border-teal-700/30 bg-teal-50 hover:bg-teal-100 hover:border-teal-700/50 transition-colors">
-              Loan {loanSummary.loanNumber}
-              <ChevronDown size={16} className="mt-0.5 text-teal-700 shrink-0" />
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="start">
-              {loans.map(loan => (
-                <DropdownMenuItem
-                  key={loan.id}
-                  onClick={() => setSelectedLoanId(loan.id)}
-                  className="flex items-center gap-2 min-w-[220px]"
-                >
-                  <Check
-                    size={14}
-                    className={selectedLoanId === loan.id ? 'text-teal-700' : 'invisible'}
-                  />
-                  <div>
-                    <span className="font-medium">{loan.summary.loanNumber}</span>
-                    <span className="text-gray-400 ml-2 text-xs">{loan.summary.address.split(',')[0]}</span>
-                  </div>
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
+          /* Option B: dropdown to switch loans + eye toggle */
+          <div className="flex items-center gap-2">
+            <DropdownMenu>
+              <DropdownMenuTrigger className="flex items-center gap-2 font-kadwa text-[22px] font-bold text-navy-800 leading-tight cursor-pointer pl-1 pr-2.5 py-0.5 rounded-lg border border-teal-700/30 bg-teal-50 hover:bg-teal-100 hover:border-teal-700/50 transition-colors">
+                Loan {revealed ? loanSummary.loanNumberFull : loanSummary.loanNumber}
+                <ChevronDown size={16} className="mt-0.5 text-teal-700 shrink-0" />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start">
+                {loans.map(loan => (
+                  <DropdownMenuItem
+                    key={loan.id}
+                    onClick={() => setSelectedLoanId(loan.id)}
+                    className="flex items-center gap-2 min-w-[220px]"
+                  >
+                    <Check
+                      size={14}
+                      className={selectedLoanId === loan.id ? 'text-teal-700' : 'invisible'}
+                    />
+                    <div>
+                      <span className="font-medium">{loan.summary.loanNumber}</span>
+                      <span className="text-gray-400 ml-2 text-xs">{loan.summary.address.split(',')[0]}</span>
+                    </div>
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+            <button
+              onClick={() => setRevealed(r => !r)}
+              className="text-gray-400 hover:text-teal-700 transition-colors mt-0.5"
+              aria-label={revealed ? 'Hide loan number' : 'Show full loan number'}
+            >
+              {revealed ? <EyeOff size={16} /> : <Eye size={16} />}
+            </button>
+          </div>
         ) : (
-          <h1 className="font-kadwa text-[22px] font-bold text-navy-800 leading-tight">
-            Loan {loanSummary.loanNumber}
-          </h1>
+          /* Single / Option A: plain h1 + eye toggle */
+          <div className="flex items-center gap-2">
+            <h1 className="font-kadwa text-[22px] font-bold text-navy-800 leading-tight">
+              Loan {revealed ? loanSummary.loanNumberFull : loanSummary.loanNumber}
+            </h1>
+            <button
+              onClick={() => setRevealed(r => !r)}
+              className="text-gray-400 hover:text-teal-700 transition-colors mt-0.5"
+              aria-label={revealed ? 'Hide loan number' : 'Show full loan number'}
+            >
+              {revealed ? <EyeOff size={16} /> : <Eye size={16} />}
+            </button>
+          </div>
         )}
         <p className="text-[13px] text-gray-500 mt-0.5">{loanSummary.address}</p>
       </div>
