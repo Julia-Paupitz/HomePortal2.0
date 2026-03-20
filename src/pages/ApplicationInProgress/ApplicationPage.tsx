@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { ArrowRight, Hop as Home, ChevronDown, ChevronUp } from 'lucide-react'
+import { ArrowRight, House as Home, ChevronDown, ChevronUp } from 'lucide-react'
 import { userProfile } from '@/data/mockData'
 
 const APP_URL = 'https://andyg-xd-smartapp-fu-tldx.bolt.host/apply/property-info'

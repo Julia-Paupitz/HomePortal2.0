@@ -17,7 +17,7 @@ function DownPaymentTracker() {
         </div>
         <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
           <div
-            className="h-full bg-teal-700 rounded-full transition-all"
+            className="h-full bg-green-500 rounded-full transition-all"
             style={{ width: `${percent}%` }}
           />
         </div>
@@ -29,7 +29,7 @@ function DownPaymentTracker() {
           </div>
           <div className="text-xs text-gray-400">of ${goal.toLocaleString()} goal</div>
         </div>
-        <div className="text-sm font-semibold text-teal-700">{percent}%</div>
+        <div className="text-sm font-semibold text-green-600">{percent}%</div>
       </div>
     </div>
   )
@@ -37,14 +37,14 @@ function DownPaymentTracker() {
 
 function RateTracker() {
   const { trackedRate, sparklineData } = rateTracker
-  const w = 80
-  const h = 24
+  const vbW = 80
+  const vbH = 24
   const min = Math.min(...sparklineData) - 0.05
   const max = Math.max(...sparklineData) + 0.05
   const points = sparklineData
     .map((v, i) => {
-      const x = (i / (sparklineData.length - 1)) * w
-      const y = h - ((v - min) / (max - min)) * h
+      const x = (i / (sparklineData.length - 1)) * vbW
+      const y = vbH - ((v - min) / (max - min)) * vbH
       return `${x},${y}`
     })
     .join(' ')
@@ -54,22 +54,18 @@ function RateTracker() {
       <div className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-3">
         Rate Tracker
       </div>
-      <div className="flex items-center gap-3 mb-3">
-        <svg width={w} height={h} className="shrink-0">
-          <polyline
-            points={points}
-            fill="none"
-            stroke="#1A7A78"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
-        <span className="inline-flex items-center px-2 py-0.5 rounded-full bg-teal-50 text-teal-700 text-xs font-semibold">
-          {trackedRate}%
-        </span>
-      </div>
-      <div className="text-xs text-gray-400">Current tracked rate</div>
+      <div className="text-2xl font-bold text-navy-800 mb-0.5">{trackedRate}%</div>
+      <div className="text-xs text-gray-400 mb-3">Current tracked rate</div>
+      <svg width="100%" height={vbH} viewBox={`0 0 ${vbW} ${vbH}`} preserveAspectRatio="none">
+        <polyline
+          points={points}
+          fill="none"
+          stroke="#9A6C00"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </svg>
     </div>
   )
 }

@@ -1,4 +1,4 @@
-import { Hop as Home, Plus, CreditCard, Calculator, BookOpen } from 'lucide-react'
+import { House as Home, Plus, CreditCard, Calculator, BookOpen } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 export interface BottomNavItem {

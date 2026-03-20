@@ -13,6 +13,7 @@ import type {
   ApplicationSummary,
   ApplicationTask,
   ApplicationMilestone,
+  LoanDocument,
 } from '@/types'
 
 export const loanSummary: LoanSummary = {
@@ -257,4 +258,20 @@ export const homeTeam: HomeTeamMember[] = [
     avatarInitials: 'KA',
     avatarColor: '#1A7A78',
   },
+]
+
+export const loanDocuments: LoanDocument[] = [
+  { id: 'd1',  name: 'Escrow Analysis Statement',                                              date: '2025-01-22' },
+  { id: 'd2',  name: 'Escrow Analysis Statement Escrow Analysis Statement Escrow Analysis',    date: '2025-01-22' },
+  { id: 'd3',  name: 'Escrow Analysis Statement Escrow Analysis Statement Escrow Analysis',    date: '2025-10-22' },
+  { id: 'd4',  name: 'Escrow Analysis Statement',                                              date: '2025-01-22' },
+  { id: 'd5',  name: 'Escrow Analysis Statement',                                              date: '2025-01-22' },
+  { id: 'd6',  name: 'Escrow Analysis Statement',                                              date: '2025-01-22' },
+  { id: 'd7',  name: 'Escrow Analysis Statement',                                              date: '2025-01-22' },
+  { id: 'd8',  name: 'Escrow Analysis Statement',                                              date: '2025-01-22' },
+  { id: 'd9',  name: 'Escrow Analysis Statement',                                              date: '2025-01-22' },
+  { id: 'd10', name: 'Escrow Analysis Statement',                                              date: '2025-01-22' },
+  { id: 'd11', name: 'Escrow Analysis Statement',                                              date: '2025-01-22' },
+  { id: 'd12', name: 'Escrow Analysis Statement',                                              date: '2025-01-22' },
+  { id: 'd13', name: '2024 Tax Statement',                                                     date: '2025-02-14' },
 ]

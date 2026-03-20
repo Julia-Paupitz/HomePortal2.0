@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import { ArrowRight, Hop as Home, ChevronDown, ChevronUp } from 'lucide-react'
-import { userProfile } from '@/data/mockData'
+import { ArrowRight, House as Home, ChevronDown, ChevronUp, Phone, Mail } from 'lucide-react'
+import { userProfile, loContact } from '@/data/mockData'
 import { useDevSwitcher } from '@/context/DevSwitcherContext'
 
 const APP_URL = 'https://andyg-xd-smartapp-fu-tldx.bolt.host/apply/property-info'
@@ -68,6 +68,44 @@ function UnfinishedAppCard({ onSubmit }: { onSubmit: () => void }) {
         >
           Submit Application
         </button>
+      </div>
+
+      {/* LO Contact section — white background to visually distinguish it */}
+      <div
+        className="bg-white -mx-6 sm:-mx-8 -mb-6 sm:-mb-8 mt-6 px-6 sm:px-8 pt-5 pb-6 sm:pb-8 rounded-b-2xl border-t border-teal-700/15"
+        onClick={e => e.stopPropagation()}
+      >
+        <p className="text-sm text-gray-500 mb-4">
+          Need help? Your loan officer is ready to assist.
+        </p>
+        <div className="flex items-center gap-3 mb-4">
+          <div className="w-12 h-12 rounded-full bg-teal-700 text-white font-bold flex items-center justify-center shrink-0">
+            {loContact.avatarInitials}
+          </div>
+          <div>
+            <p className="text-sm font-semibold text-navy-800">{loContact.name}</p>
+            <p className="text-xs text-gray-500">{loContact.role}</p>
+            <p className="text-xs text-gray-500">{loContact.phone}</p>
+          </div>
+        </div>
+        <div className="flex flex-wrap gap-3">
+          <a
+            href={`tel:${loContact.phone}`}
+            onClick={e => e.stopPropagation()}
+            className="inline-flex items-center gap-2 border border-teal-700 text-teal-700 text-sm font-semibold px-4 py-2 rounded-xl hover:bg-teal-50 transition-colors"
+          >
+            <Phone size={14} />
+            Call
+          </a>
+          <a
+            href={`mailto:${loContact.email}`}
+            onClick={e => e.stopPropagation()}
+            className="inline-flex items-center gap-2 border border-teal-700 text-teal-700 text-sm font-semibold px-4 py-2 rounded-xl hover:bg-teal-50 transition-colors"
+          >
+            <Mail size={14} />
+            Email
+          </a>
+        </div>
       </div>
     </a>
   )

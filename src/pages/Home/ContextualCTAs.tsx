@@ -13,7 +13,7 @@ interface CTACardProps {
 function CTACard({ icon, iconBg, title, description, buttonLabel, buttonClass }: CTACardProps) {
   return (
     <div className="bg-white border border-gray-200 rounded-xl p-4 flex flex-col gap-3">
-      <div className={`w-9 h-9 rounded-lg ${iconBg} flex items-center justify-center shrink-0`}>
+      <div className={`w-9 h-9 rounded-full ${iconBg} flex items-center justify-center shrink-0`}>
         {icon}
       </div>
       <div className="flex-1">
@@ -32,31 +32,31 @@ export function ContextualCTAs() {
     <div className="space-y-3">
       <CTACard
         icon={<CreditCard size={18} className="text-teal-700" />}
-        iconBg="bg-teal-50"
+        iconBg="bg-teal-100"
         title="Make a Payment"
         description={`Next payment due ${nextPayment.dueDate}`}
         buttonLabel="Pay now"
         buttonClass="bg-teal-700 text-white hover:bg-teal-700/90"
       />
       <CTACard
-        icon={<Lock size={18} className="text-yellow-700" />}
-        iconBg="bg-yellow-50"
+        icon={<Lock size={18} className="text-amber-700" />}
+        iconBg="bg-amber-100"
         title="Lock Your Rate"
         description="Rates are moving — see today's available rates"
         buttonLabel="View rates"
         buttonClass="bg-yellow-50 text-yellow-700 border border-yellow-700/30 hover:bg-yellow-100"
       />
       <CTACard
-        icon={<Upload size={18} className="text-gray-500" />}
-        iconBg="bg-surface-100"
+        icon={<Upload size={18} className="text-purple-600" />}
+        iconBg="bg-purple-100"
         title="Upload Documents"
         description="3 documents requested for your file"
         buttonLabel="Upload"
         buttonClass="bg-surface-100 text-gray-600 border border-gray-200 hover:bg-gray-100"
       />
       <CTACard
-        icon={<Calculator size={18} className="text-navy-500" />}
-        iconBg="bg-navy-300/10"
+        icon={<Calculator size={18} className="text-blue-600" />}
+        iconBg="bg-blue-100"
         title="Refinance Calculator"
         description="See if refinancing could lower your payment"
         buttonLabel="See if you qualify"

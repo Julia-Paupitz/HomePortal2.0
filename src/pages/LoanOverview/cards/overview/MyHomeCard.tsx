@@ -1,4 +1,4 @@
-import { Hop as Home, ChevronRight } from 'lucide-react'
+import { House as Home, ChevronRight } from 'lucide-react'
 import { myHome } from '@/data/mockData'
 
 export function MyHomeCard() {
