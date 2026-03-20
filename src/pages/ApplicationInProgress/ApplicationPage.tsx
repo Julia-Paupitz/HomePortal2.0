@@ -125,7 +125,7 @@ export function ApplicationPage() {
       <section className="space-y-4">
         <h2 className="text-lg font-semibold text-navy-800">Applications</h2>
         <UnfinishedAppCard />
-        <button className="bg-gray-100 hover:bg-gray-200 text-navy-800 font-semibold text-sm px-5 py-2.5 rounded-xl transition-colors">
+        <button className="bg-gray-100 hover:bg-gray-200 text-navy-800 font-semibold text-sm px-5 py-2.5 rounded-full transition-colors">
           Start New Application
         </button>
       </section>

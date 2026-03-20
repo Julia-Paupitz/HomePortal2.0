@@ -1,9 +1,15 @@
 import { useState, useEffect } from 'react'
-import { House as Home, ChevronDown } from 'lucide-react'
+import { House as Home, ChevronDown, ChevronLeft, Check } from 'lucide-react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from '@/components/ui/dropdown-menu'
 import { useIsMobile } from '@/hooks/useIsMobile'
 import { useDevSwitcher } from '@/context/DevSwitcherContext'
-import { loanSummary } from '@/data/mockData'
+import { loans } from '@/data/mockData'
 import { OverviewTab } from './tabs/OverviewTab'
 import { PaymentsTab } from './tabs/PaymentsTab'
 import { EscrowTab } from './tabs/EscrowTab'
@@ -43,9 +49,11 @@ function SectionDropdown({ value, onChange }: { value: string; onChange: (v: str
 interface LoanOverviewPageProps {
   requestedTab?: string
   onTabConsumed?: () => void
+  fromLoansList?: boolean
+  onBack?: () => void
 }
 
-export function LoanOverviewPage({ requestedTab, onTabConsumed }: LoanOverviewPageProps) {
+export function LoanOverviewPage({ requestedTab, onTabConsumed, fromLoansList = false, onBack }: LoanOverviewPageProps) {
   const [activeTab, setActiveTab] = useState(requestedTab ?? 'overview')
 
   useEffect(() => {
@@ -54,10 +62,15 @@ export function LoanOverviewPage({ requestedTab, onTabConsumed }: LoanOverviewPa
       onTabConsumed?.()
     }
   }, [requestedTab]) // eslint-disable-line react-hooks/exhaustive-deps
+
   const isMobile = useIsMobile()
-  const { componentVariations, notifications } = useDevSwitcher()
+  const { componentVariations, notifications, loanNavMode, selectedLoanId, setSelectedLoanId } = useDevSwitcher()
   const showWidgets = widgetTabs.has(activeTab) && !isMobile
   const useDropdownNav = isMobile && componentVariations['loanOverviewNav'] === 'dropdown'
+
+  // Look up the active loan from the loans array
+  const activeLoan = loans.find(l => l.id === selectedLoanId) ?? loans[0]
+  const { summary: loanSummary } = activeLoan
 
   const loanHeader = (
     <div className="flex items-start gap-3.5">
@@ -65,9 +78,37 @@ export function LoanOverviewPage({ requestedTab, onTabConsumed }: LoanOverviewPa
         <Home size={28} />
       </div>
       <div>
-        <h1 className="font-kadwa text-[22px] font-bold text-navy-800 leading-tight">
-          Loan {loanSummary.loanNumber}
-        </h1>
+        {loanNavMode === 'option-b' ? (
+          /* Option B: dropdown to switch loans */
+          <DropdownMenu>
+            <DropdownMenuTrigger className="flex items-center gap-2 font-kadwa text-[22px] font-bold text-navy-800 leading-tight cursor-pointer pl-1 pr-2.5 py-0.5 rounded-lg border border-teal-700/30 bg-teal-50 hover:bg-teal-100 hover:border-teal-700/50 transition-colors">
+              Loan {loanSummary.loanNumber}
+              <ChevronDown size={16} className="mt-0.5 text-teal-700 shrink-0" />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="start">
+              {loans.map(loan => (
+                <DropdownMenuItem
+                  key={loan.id}
+                  onClick={() => setSelectedLoanId(loan.id)}
+                  className="flex items-center gap-2 min-w-[220px]"
+                >
+                  <Check
+                    size={14}
+                    className={selectedLoanId === loan.id ? 'text-teal-700' : 'invisible'}
+                  />
+                  <div>
+                    <span className="font-medium">{loan.summary.loanNumber}</span>
+                    <span className="text-gray-400 ml-2 text-xs">{loan.summary.address.split(',')[0]}</span>
+                  </div>
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        ) : (
+          <h1 className="font-kadwa text-[22px] font-bold text-navy-800 leading-tight">
+            Loan {loanSummary.loanNumber}
+          </h1>
+        )}
         <p className="text-[13px] text-gray-500 mt-0.5">{loanSummary.address}</p>
       </div>
     </div>
@@ -95,6 +136,17 @@ export function LoanOverviewPage({ requestedTab, onTabConsumed }: LoanOverviewPa
 
   return (
     <div className="max-w-5xl mx-auto">
+      {/* Option A: back button */}
+      {fromLoansList && onBack && (
+        <button
+          onClick={onBack}
+          className="flex items-center gap-1 text-sm text-teal-700 hover:text-teal-800 mb-4 transition-colors"
+        >
+          <ChevronLeft size={16} />
+          Back to Loans
+        </button>
+      )}
+
       {/* Desktop loan header (above everything) */}
       {!isMobile && <div className="mb-6">{loanHeader}</div>}
 

@@ -20,7 +20,7 @@ function UnfinishedAppCard({ onSubmit }: { onSubmit: () => void }) {
     >
       {/* Icon + status */}
       <div className="flex items-start justify-between mb-5">
-        <div className="w-12 h-12 rounded-xl bg-teal-700 flex items-center justify-center">
+        <div className="w-12 h-12 rounded-full bg-teal-700 flex items-center justify-center">
           <Home size={24} className="text-white" />
         </div>
         <span className="text-[11px] font-semibold uppercase tracking-widest text-teal-700 pt-1">
@@ -58,13 +58,13 @@ function UnfinishedAppCard({ onSubmit }: { onSubmit: () => void }) {
 
       {/* CTAs */}
       <div className="flex flex-wrap items-center gap-3">
-        <div className="inline-flex items-center gap-2 bg-teal-700 group-hover:bg-[#145f5e] text-white font-semibold text-sm px-5 py-2.5 rounded-xl transition-colors">
+        <div className="inline-flex items-center gap-2 bg-teal-700 group-hover:bg-[#145f5e] text-white font-semibold text-sm px-5 py-2.5 rounded-full transition-colors">
           Continue Application
           <ArrowRight size={16} className="transition-transform group-hover:translate-x-0.5" />
         </div>
         <button
           onClick={e => { e.preventDefault(); e.stopPropagation(); onSubmit() }}
-          className="inline-flex items-center gap-2 border border-teal-700 text-teal-700 font-semibold text-sm px-5 py-2.5 rounded-xl hover:bg-teal-50 transition-colors"
+          className="inline-flex items-center gap-2 border border-teal-700 text-teal-700 font-semibold text-sm px-5 py-2.5 rounded-full hover:bg-teal-50 transition-colors"
         >
           Submit Application
         </button>
@@ -92,7 +92,7 @@ function UnfinishedAppCard({ onSubmit }: { onSubmit: () => void }) {
           <a
             href={`tel:${loContact.phone}`}
             onClick={e => e.stopPropagation()}
-            className="inline-flex items-center gap-2 border border-teal-700 text-teal-700 text-sm font-semibold px-4 py-2 rounded-xl hover:bg-teal-50 transition-colors"
+            className="inline-flex items-center gap-2 border border-teal-700 text-teal-700 text-sm font-semibold px-4 py-2 rounded-full hover:bg-teal-50 transition-colors"
           >
             <Phone size={14} />
             Call
@@ -100,7 +100,7 @@ function UnfinishedAppCard({ onSubmit }: { onSubmit: () => void }) {
           <a
             href={`mailto:${loContact.email}`}
             onClick={e => e.stopPropagation()}
-            className="inline-flex items-center gap-2 border border-teal-700 text-teal-700 text-sm font-semibold px-4 py-2 rounded-xl hover:bg-teal-50 transition-colors"
+            className="inline-flex items-center gap-2 border border-teal-700 text-teal-700 text-sm font-semibold px-4 py-2 rounded-full hover:bg-teal-50 transition-colors"
           >
             <Mail size={14} />
             Email

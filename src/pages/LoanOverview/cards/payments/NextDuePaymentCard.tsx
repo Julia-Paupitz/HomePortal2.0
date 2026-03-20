@@ -44,13 +44,13 @@ export function NextDuePaymentCard() {
       <div className="flex justify-end gap-2.5 pt-4 border-t border-surface-100">
         <button
           onClick={() => toast.info('AutoPay settings opened')}
-          className="flex items-center gap-1.5 bg-transparent text-teal-700 border-[1.5px] border-teal-700 hover:bg-teal-50 rounded-xl px-4 py-3.5 text-[15px] font-semibold transition-colors cursor-pointer"
+          className="flex items-center gap-1.5 bg-transparent text-teal-700 border-[1.5px] border-teal-700 hover:bg-teal-50 rounded-full px-4 py-3.5 text-[15px] font-semibold transition-colors cursor-pointer"
         >
           Manage AutoPay
         </button>
         <button
           onClick={() => toast.success('Payment submitted', { description: `$${p.amount.toLocaleString('en-US', { minimumFractionDigits: 2 })} scheduled for ${p.dueDate}` })}
-          className="flex items-center gap-2 bg-teal-700 hover:bg-[#145f5e] hover:-translate-y-px text-white rounded-xl px-7 py-3.5 text-[15px] font-semibold transition-all shadow-[0_4px_12px_rgba(26,122,120,0.28)] cursor-pointer"
+          className="flex items-center gap-2 bg-teal-700 hover:bg-[#145f5e] hover:-translate-y-px text-white rounded-full px-7 py-3.5 text-[15px] font-semibold transition-all shadow-[0_4px_12px_rgba(26,122,120,0.28)] cursor-pointer"
         >
           <CreditCard size={16} />
           Pay now

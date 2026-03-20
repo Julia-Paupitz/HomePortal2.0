@@ -1,5 +1,6 @@
 import { useIsMobile } from '@/hooks/useIsMobile'
-import { userProfile } from '@/data/mockData'
+import { useDevSwitcher } from '@/context/DevSwitcherContext'
+import { userProfile, loans } from '@/data/mockData'
 import { LoanSummaryCard } from './LoanSummaryCard'
 import { TrackingWidgets } from './TrackingWidgets'
 import { ToolsWidgets } from './ToolsWidgets'
@@ -7,11 +8,14 @@ import { ProductsSection } from './ProductsSection'
 import { ContextualCTAs } from './ContextualCTAs'
 
 interface HomePageProps {
-  onNavigate: (id: string) => void
+  onNavigate: (id: string, loanId?: string) => void
 }
 
 export function HomePage({ onNavigate }: HomePageProps) {
   const isMobile = useIsMobile()
+  const { loanNavMode } = useDevSwitcher()
+  const visibleLoans = loanNavMode === 'single' ? loans.slice(0, 1) : loans
+  const loansHeading = loanNavMode === 'single' ? 'Loans' : `Loans (${loans.length})`
 
   return (
     <div className={isMobile ? 'pt-6 space-y-6' : 'max-w-4xl mx-auto grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-6'}>
@@ -24,8 +28,16 @@ export function HomePage({ onNavigate }: HomePageProps) {
 
         {/* Loans */}
         <section>
-          <h2 className="text-sm font-semibold text-navy-800 mb-3">Loans</h2>
-          <LoanSummaryCard onNavigate={onNavigate} />
+          <h2 className="text-sm font-semibold text-navy-800 mb-3">{loansHeading}</h2>
+          <div className="space-y-3">
+            {visibleLoans.map(loan => (
+              <LoanSummaryCard
+                key={loan.id}
+                loan={loan}
+                onNavigate={onNavigate}
+              />
+            ))}
+          </div>
         </section>
 
         {/* Tracking */}
