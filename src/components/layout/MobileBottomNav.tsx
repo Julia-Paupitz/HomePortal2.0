@@ -12,7 +12,7 @@ const defaultNavItems: BottomNavItem[] = [
   { icon: Plus,       label: 'Applications',   id: 'applications' },
   { icon: CreditCard, label: 'Loans',          id: 'my-loan' },
   { icon: Calculator, label: 'Calculators',    id: 'calculator' },
-  { icon: BookOpen,   label: 'Learning Center', id: 'learning-center' },
+  { icon: BookOpen,   label: 'Help Center', id: 'learning-center' },
 ]
 
 interface MobileBottomNavProps {
@@ -24,8 +24,8 @@ interface MobileBottomNavProps {
 export function MobileBottomNav({ activeItem, onNavChange, navItems = defaultNavItems }: MobileBottomNavProps) {
   return (
     <nav
-      className="w-full bg-white border-t border-gray-200 flex items-center justify-around h-16 shrink-0"
-      style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
+      className="w-full bg-white border-t border-gray-200 flex items-center justify-around shrink-0"
+      style={{ minHeight: '64px', paddingBottom: 'env(safe-area-inset-bottom)' }}
     >
       {navItems.map(({ icon: Icon, label, id }) => {
         const isActive = activeItem === id
@@ -45,7 +45,7 @@ export function MobileBottomNav({ activeItem, onNavChange, navItems = defaultNav
               )}
             >
               <Icon size={18} />
-              <span>{label}</span>
+              <span className="whitespace-nowrap">{label}</span>
             </span>
           </button>
         )

@@ -45,7 +45,7 @@ export function ProductsSection() {
                 <div className="text-sm font-semibold text-navy-800 mb-0.5">{product.name}</div>
                 <div className="text-xs text-gray-500 leading-relaxed">{product.tagline}</div>
               </div>
-              <button className="mt-auto text-xs font-semibold text-teal-700 border border-teal-700/30 rounded-lg px-3 py-1.5 hover:bg-teal-50 transition-colors self-start">
+              <button className="mt-auto text-xs font-semibold text-teal-700 border border-teal-700/30 rounded-full px-3 py-1.5 hover:bg-teal-50 transition-colors self-start">
                 Learn more
               </button>
             </div>
@@ -65,7 +65,7 @@ export function ProductsSection() {
                 <div className="text-sm font-semibold text-navy-800 mb-0.5">{product.name}</div>
                 <div className="text-xs text-gray-500 leading-relaxed">{product.tagline}</div>
               </div>
-              <button className="mt-auto text-xs font-semibold text-teal-700 border border-teal-700/30 rounded-lg px-3 py-1.5 hover:bg-teal-50 transition-colors self-start">
+              <button className="mt-auto text-xs font-semibold text-teal-700 border border-teal-700/30 rounded-full px-3 py-1.5 hover:bg-teal-50 transition-colors self-start">
                 Learn more
               </button>
             </div>

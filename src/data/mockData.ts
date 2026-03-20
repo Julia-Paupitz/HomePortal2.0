@@ -260,6 +260,36 @@ export const homeTeam: HomeTeamMember[] = [
   },
 ]
 
+export const loanSummary2: LoanSummary = {
+  loanNumber: '••••••••5678',
+  address: '201 Oak Ave, Pittsburgh, PA 15201',
+  principalBalance: 187_500,
+  originalLoanAmount: 240_000,
+  interestRate: 6.875,
+  originalTermMonths: 360,
+  remainingTermMonths: 312,
+  startDate: '06/01/2020',
+  maturityDate: '06/01/2050',
+  originalPayoffDate: '06/01/2050',
+  estimatedEquity: 52_500,
+  homeValue: 240_000,
+  equityPercent: 21.9,
+  paidOffPercent: 22,
+}
+
+export const nextPayment2: NextPayment = {
+  amount: 1_450,
+  dueDate: '04/01/2026',
+  status: 'ok',
+  statusLabel: 'Paid',
+  autoPayEnabled: true,
+}
+
+export const loans = [
+  { id: 'loan-1', summary: loanSummary,  payment: nextPayment  },
+  { id: 'loan-2', summary: loanSummary2, payment: nextPayment2 },
+]
+
 export const loanDocuments: LoanDocument[] = [
   { id: 'd1',  name: 'Escrow Analysis Statement',                                              date: '2025-01-22' },
   { id: 'd2',  name: 'Escrow Analysis Statement Escrow Analysis Statement Escrow Analysis',    date: '2025-01-22' },
@@ -275,3 +305,24 @@ export const loanDocuments: LoanDocument[] = [
   { id: 'd12', name: 'Escrow Analysis Statement',                                              date: '2025-01-22' },
   { id: 'd13', name: '2024 Tax Statement',                                                     date: '2025-02-14' },
 ]
+
+export const helpCenterTopics = [
+  { id: 'payments',    label: 'Payments' },
+  { id: 'statements',  label: 'Statements' },
+  { id: 'escrow',      label: 'Escrow' },
+  { id: 'refinancing', label: 'Refinancing' },
+]
+
+export const helpCenterFAQ = [
+  { id: 'faq-1', label: 'How do I make a payment?' },
+  { id: 'faq-2', label: 'When is my next payment due?' },
+  { id: 'faq-3', label: 'How do I set up AutoPay?' },
+  { id: 'faq-4', label: 'How do I request a payoff statement?' },
+]
+
+export const helpCenterLearning = [
+  { id: 'lc-1', label: 'Understanding Your Mortgage Statement' },
+  { id: 'lc-2', label: 'How to Build Home Equity Faster' },
+]
+
+export const supportPhone = '(800) 555-0100'

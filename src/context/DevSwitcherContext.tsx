@@ -2,6 +2,7 @@ import { createContext, useContext, useState, useEffect, type ReactNode } from '
 
 export type GlobalState = 'account-creation' | 'application' | 'application-in-progress' | 'application-submitted' | 'loan-funded'
 export type LayoutMode = 'desktop' | 'mobile'
+export type LoanNavMode = 'single' | 'option-a' | 'option-b'
 
 export interface NotificationFlags {
   paymentAccepted: boolean
@@ -21,6 +22,8 @@ interface DevSwitcherState {
   globalState: GlobalState
   componentVariations: Record<string, string>
   notifications: NotificationFlags
+  loanNavMode: LoanNavMode
+  selectedLoanId: string
 }
 
 interface DevSwitcherContextValue extends DevSwitcherState {
@@ -29,6 +32,8 @@ interface DevSwitcherContextValue extends DevSwitcherState {
   setGlobalState: (state: GlobalState) => void
   setComponentVariation: (key: string, value: string) => void
   setNotification: (key: keyof NotificationFlags, value: boolean) => void
+  setLoanNavMode: (mode: LoanNavMode) => void
+  setSelectedLoanId: (id: string) => void
   reset: () => void
 }
 
@@ -40,6 +45,8 @@ const defaults: DevSwitcherState = {
   globalState: 'loan-funded',
   componentVariations: {},
   notifications: defaultNotifications,
+  loanNavMode: 'single',
+  selectedLoanId: 'loan-1',
 }
 
 function loadFromStorage(): DevSwitcherState {
@@ -51,6 +58,8 @@ function loadFromStorage(): DevSwitcherState {
         ...defaults,
         ...parsed,
         notifications: { ...defaultNotifications, ...(parsed.notifications ?? {}) },
+        loanNavMode: (parsed.loanNavMode as LoanNavMode | undefined) ?? defaults.loanNavMode,
+        selectedLoanId: parsed.selectedLoanId ?? defaults.selectedLoanId,
         isOpen: false,
       }
     }
@@ -73,9 +82,11 @@ export function DevSwitcherProvider({ children }: { children: ReactNode }) {
         globalState: state.globalState,
         componentVariations: state.componentVariations,
         notifications: state.notifications,
+        loanNavMode: state.loanNavMode,
+        selectedLoanId: state.selectedLoanId,
       })
     )
-  }, [state.layoutMode, state.globalState, state.componentVariations, state.notifications])
+  }, [state.layoutMode, state.globalState, state.componentVariations, state.notifications, state.loanNavMode, state.selectedLoanId])
 
   const setIsOpen = (isOpen: boolean) => setState(s => ({ ...s, isOpen }))
   const setLayoutMode = (layoutMode: LayoutMode) => setState(s => ({ ...s, layoutMode }))
@@ -84,11 +95,13 @@ export function DevSwitcherProvider({ children }: { children: ReactNode }) {
     setState(s => ({ ...s, componentVariations: { ...s.componentVariations, [key]: value } }))
   const setNotification = (key: keyof NotificationFlags, value: boolean) =>
     setState(s => ({ ...s, notifications: { ...s.notifications, [key]: value } }))
+  const setLoanNavMode = (loanNavMode: LoanNavMode) => setState(s => ({ ...s, loanNavMode }))
+  const setSelectedLoanId = (selectedLoanId: string) => setState(s => ({ ...s, selectedLoanId }))
   const reset = () => setState({ ...defaults })
 
   return (
     <DevSwitcherContext.Provider
-      value={{ ...state, setIsOpen, setLayoutMode, setGlobalState, setComponentVariation, setNotification, reset }}
+      value={{ ...state, setIsOpen, setLayoutMode, setGlobalState, setComponentVariation, setNotification, setLoanNavMode, setSelectedLoanId, reset }}
     >
       {children}
     </DevSwitcherContext.Provider>

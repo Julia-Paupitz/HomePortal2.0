@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { House as Home, CirclePlus, Calculator, BookOpen } from 'lucide-react'
+import { House as Home, CirclePlus, Calculator, BookOpen, Building2, CreditCard } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { AppHeader } from '@/components/layout/AppHeader'
 import { AppSidebar } from '@/components/layout/AppSidebar'
@@ -13,16 +13,19 @@ import { FileText, AlertTriangle } from 'lucide-react'
 import { useIsMobile } from '@/hooks/useIsMobile'
 import { LoanOverviewPage } from '@/pages/LoanOverview'
 import { HomePage } from '@/pages/Home'
+import { LoansListPage } from '@/pages/LoansListPage'
+import { HelpCenterPage } from '@/pages/HelpCenter'
 import { AccountCreationPage } from '@/pages/AccountCreation'
 import { LoanApplicationPage } from '@/pages/LoanApplication'
 import { ApplicationSubmittedPage } from '@/pages/ApplicationSubmitted'
 import { ApplicationInProgressPage } from '@/pages/ApplicationInProgress'
+import { CalculatorsPage } from '@/pages/Calculators'
 
 // Nav items for the account-creation state
 const accountCreationSidebarItems = [
   { id: 'home',            label: 'Home',            icon: <Home size={16} /> },
   { id: 'calculator',     label: 'Calculators',     icon: <Calculator size={16} /> },
-  { id: 'learning-center', label: 'Learning Center', icon: <BookOpen size={16} /> },
+  { id: 'learning-center', label: 'Help Center', icon: <BookOpen size={16} /> },
 ]
 
 // Nav items for the application-in-progress state
@@ -35,23 +38,24 @@ const appSubmittedSidebarItems = [
   { id: 'home',            label: 'Home',            icon: <Home size={16} /> },
   { id: 'application',    label: 'Application',     icon: <CirclePlus size={16} /> },
   { id: 'calculator',     label: 'Calculators',     icon: <Calculator size={16} /> },
-  { id: 'learning-center', label: 'Learning Center', icon: <BookOpen size={16} /> },
+  { id: 'learning-center', label: 'Help Center', icon: <BookOpen size={16} /> },
 ]
 
 const appSubmittedMobileNavItems = [
   { id: 'home',            label: 'Home',            icon: Home },
   { id: 'application',    label: 'Application',     icon: CirclePlus },
   { id: 'calculator',     label: 'Calculators',     icon: Calculator },
-  { id: 'learning-center', label: 'Learning Center', icon: BookOpen },
+  { id: 'learning-center', label: 'Help Center', icon: BookOpen },
 ]
 
 function AppShell() {
-  const { globalState, notifications, setNotification } = useDevSwitcher()
+  const { globalState, notifications, setNotification, loanNavMode, setSelectedLoanId } = useDevSwitcher()
   const isMobile = useIsMobile()
   const [activeNav, setActiveNav] = useState('home')
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false)
   const [showPreferencesBadge, setShowPreferencesBadge] = useState(false)
   const [loanRequestedTab, setLoanRequestedTab] = useState<string | undefined>()
+  const [fromLoansList, setFromLoansList] = useState(false)
 
   // Reset activeNav when globalState or isMobile changes
   useEffect(() => {
@@ -69,6 +73,53 @@ function AppShell() {
   const isAccountCreation = globalState === 'account-creation'
   const isAppSubmitted = globalState === 'application-submitted'
   const isAppInProgress = globalState === 'application-in-progress'
+  const isActiveLoan = globalState === 'loan-funded'
+
+  // Compute active-loan mobile bottom nav items based on loanNavMode
+  const activeLoanMobileNavItems = [
+    { id: 'home',             label: 'Home',    icon: Home },
+    loanNavMode === 'option-a'
+      ? { id: 'loans-list', label: 'Loans',   icon: CreditCard }
+      : { id: 'my-loan',    label: 'My Loan', icon: CreditCard },
+    { id: 'calculator',       label: 'Calculators', icon: Calculator },
+    { id: 'learning-center',  label: 'Help Center', icon: BookOpen },
+  ]
+
+  // Compute active-loan sidebar nav items based on loanNavMode
+  const activeLoanSidebarItems = [
+    { id: 'home', label: 'Home', icon: <Home size={16} /> },
+    loanNavMode === 'option-a'
+      ? { id: 'loans-list', label: 'Loans', icon: <Building2 size={16} /> }
+      : { id: 'my-loan', label: 'My Loan', icon: <Building2 size={16} /> },
+    { id: 'calculator', label: 'Calculators', icon: <Calculator size={16} /> },
+    { id: 'learning-center', label: 'Help Center', icon: <BookOpen size={16} /> },
+  ]
+
+  function getNavItems() {
+    if (isAccountCreation) return accountCreationSidebarItems
+    if (isAppSubmitted) return appSubmittedSidebarItems
+    if (isAppInProgress) return appInProgressSidebarItems
+    if (isActiveLoan) return activeLoanSidebarItems
+    return undefined
+  }
+
+  function handleLoanSelect(loanId: string) {
+    setSelectedLoanId(loanId)
+    setFromLoansList(true)
+    setActiveNav('my-loan')
+  }
+
+  function handleHomeNavigate(id: string, loanId?: string) {
+    if (loanId) setSelectedLoanId(loanId)
+    setFromLoansList(false)
+    setActiveNav(id)
+  }
+
+  function handleNavChange(id: string) {
+    // When navigating away from my-loan via sidebar, reset fromLoansList
+    if (id !== 'my-loan') setFromLoansList(false)
+    setActiveNav(id)
+  }
 
   function renderPage() {
     if (globalState === 'account-creation')        return <AccountCreationPage />
@@ -84,11 +135,16 @@ function AppShell() {
       )
     }
 
-    if (activeNav === 'home')    return <HomePage onNavigate={setActiveNav} />
-    if (activeNav === 'my-loan') return (
+    if (activeNav === 'home')             return <HomePage onNavigate={handleHomeNavigate} />
+    if (activeNav === 'loans-list')       return <LoansListPage onSelectLoan={handleLoanSelect} />
+    if (activeNav === 'learning-center')  return <HelpCenterPage />
+    if (activeNav === 'calculator')       return <CalculatorsPage />
+    if (activeNav === 'my-loan')    return (
       <LoanOverviewPage
         requestedTab={loanRequestedTab}
         onTabConsumed={() => setLoanRequestedTab(undefined)}
+        fromLoansList={fromLoansList}
+        onBack={() => setActiveNav('loans-list')}
       />
     )
     return (
@@ -135,8 +191,8 @@ function AppShell() {
           {showBottomNav && (
             <MobileBottomNav
               activeItem={activeNav}
-              onNavChange={setActiveNav}
-              navItems={isAppSubmitted ? appSubmittedMobileNavItems : undefined}
+              onNavChange={handleNavChange}
+              navItems={isAppSubmitted ? appSubmittedMobileNavItems : isActiveLoan ? activeLoanMobileNavItems : undefined}
             />
           )}
         </div>
@@ -162,8 +218,8 @@ function AppShell() {
         <div className="hidden lg:block">
           <AppSidebar
             activeItem={activeNav}
-            onNavChange={setActiveNav}
-            navItems={isAccountCreation ? accountCreationSidebarItems : isAppSubmitted ? appSubmittedSidebarItems : isAppInProgress ? appInProgressSidebarItems : undefined}
+            onNavChange={handleNavChange}
+            navItems={getNavItems()}
           />
         </div>
       )}
@@ -173,8 +229,8 @@ function AppShell() {
           open={mobileSidebarOpen}
           onOpenChange={setMobileSidebarOpen}
           activeItem={activeNav}
-          onNavChange={setActiveNav}
-          navItems={isAccountCreation ? accountCreationSidebarItems : isAppSubmitted ? appSubmittedSidebarItems : isAppInProgress ? appInProgressSidebarItems : undefined}
+          onNavChange={handleNavChange}
+          navItems={getNavItems()}
         />
       )}
 

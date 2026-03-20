@@ -51,7 +51,7 @@ export function OpportunityWidget() {
           </div>
         </div>
       </div>
-      <button className="w-full text-xs font-semibold bg-yellow-50 text-yellow-700 border border-yellow-700/20 rounded-lg px-3 py-2 hover:bg-yellow-100 transition-colors">
+      <button className="w-full text-xs font-semibold bg-yellow-50 text-yellow-700 border border-yellow-700/20 rounded-full px-3 py-2 hover:bg-yellow-100 transition-colors">
         See if you qualify
       </button>
     </div>

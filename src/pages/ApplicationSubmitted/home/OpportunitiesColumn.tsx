@@ -12,14 +12,14 @@ interface OpportunityCardProps {
 function OpportunityCard({ icon, iconBg, title, description, buttonLabel, buttonClass }: OpportunityCardProps) {
   return (
     <div className="bg-white border border-gray-200 rounded-xl p-4 flex flex-col gap-3">
-      <div className={`w-9 h-9 rounded-lg ${iconBg} flex items-center justify-center shrink-0`}>
+      <div className={`w-9 h-9 rounded-full ${iconBg} flex items-center justify-center shrink-0`}>
         {icon}
       </div>
       <div className="flex-1">
         <div className="text-sm font-semibold text-navy-800 mb-1">{title}</div>
         <div className="text-xs text-gray-500 leading-relaxed">{description}</div>
       </div>
-      <button className={`text-xs font-semibold rounded-lg px-3 py-1.5 transition-colors self-start ${buttonClass}`}>
+      <button className={`text-xs font-semibold rounded-full px-3 py-1.5 transition-colors self-start ${buttonClass}`}>
         {buttonLabel}
       </button>
     </div>

@@ -40,7 +40,7 @@ export function RateTrackingWidget() {
           strokeLinejoin="round"
         />
       </svg>
-      <button className="w-full flex items-center justify-center gap-2 text-xs font-semibold text-teal-700 border border-teal-700/30 rounded-lg px-3 py-2 hover:bg-teal-50 transition-colors">
+      <button className="w-full flex items-center justify-center gap-2 text-xs font-semibold text-teal-700 border border-teal-700/30 rounded-full px-3 py-2 hover:bg-teal-50 transition-colors">
         <Bell size={12} />
         Set rate alert
       </button>

@@ -12,7 +12,7 @@ const defaultNavItems: SidebarNavItem[] = [
   { id: 'home',             label: 'Home',            icon: <Home size={16} /> },
   { id: 'my-loan',          label: 'My Loan',         icon: <Building2 size={16} /> },
   { id: 'calculator',       label: 'Calculator',      icon: <Calculator size={16} /> },
-  { id: 'learning-center',  label: 'Learning Center', icon: <BookOpen size={16} /> },
+  { id: 'learning-center',  label: 'Help Center', icon: <BookOpen size={16} /> },
 ]
 
 interface AppSidebarProps {

@@ -47,7 +47,7 @@ export function MonthlyPaymentCard({ onNavigateToPayments }: MonthlyPaymentCardP
       <div className="flex justify-end mt-4">
         <button
           onClick={() => toast.success('Payment submitted', { description: `$${p.amount.toLocaleString('en-US', { minimumFractionDigits: 2 })} scheduled for ${p.dueDate}` })}
-          className="flex items-center gap-2 bg-teal-700 hover:bg-[#145f5e] hover:-translate-y-px active:translate-y-0 text-white rounded-xl px-7 py-3.5 text-[15px] font-semibold transition-all shadow-[0_4px_12px_rgba(26,122,120,0.28)] cursor-pointer"
+          className="flex items-center gap-2 bg-teal-700 hover:bg-[#145f5e] hover:-translate-y-px active:translate-y-0 text-white rounded-full px-7 py-3.5 text-[15px] font-semibold transition-all shadow-[0_4px_12px_rgba(26,122,120,0.28)] cursor-pointer"
         >
           <CreditCard size={16} />
           Pay Now
